@@ -1,0 +1,4 @@
+Backpropagation is an algorithm used to train neural networks.
+It computes gradients of the loss function with respect to weights.
+Gradient descent updates parameters using these gradients.
+Regularization techniques reduce overfitting.
