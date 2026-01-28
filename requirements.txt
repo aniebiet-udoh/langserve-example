@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+tiktoken
+pydantic
+pytest
+pytest-asyncio
+httpx
+python-dotenv
+sse-starlette
+langchain
+langserve
+langsmith
+langchain-community
+langchain-classic
+langchain-openai
+openai
+faiss-cpu
