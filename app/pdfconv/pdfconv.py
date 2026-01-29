@@ -20,7 +20,7 @@ def main(argv=None):
 
 
     if args.mode == "smart":
-        from app.pdfconv_smart import PdfConverter
+        from app.pdfconv.ai import PdfConverter
         converter = PdfConverter()
         converter.convert(
             input_filename=args.input,
@@ -30,7 +30,7 @@ def main(argv=None):
         return 0
 
     else:
-        from app.pdfconv_basic import pdf_to_text, pdf_to_csv
+        from app.pdfconv.basic import pdf_to_text, pdf_to_csv
 
         # Read input bytes
         if args.input == "-":
