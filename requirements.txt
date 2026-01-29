@@ -12,6 +12,10 @@ langserve
 langsmith
 langchain-community
 langchain-classic
+langchain-text-splitters
 langchain-openai
+langchain-groq
+langchain-google-genai
 openai
 faiss-cpu
+PyPDF2

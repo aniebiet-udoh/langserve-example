@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from langserve import add_routes
 
 from app.agent import get_agent
-# from app.chains import get_rag_chain
+from app.chains import get_rag_chain
 
 app = FastAPI(
     title="Agentic AI Backend",
@@ -14,10 +14,10 @@ app = FastAPI(
 )
 
 agent = get_agent()
-# rag_chain = get_rag_chain()
+rag_chain = get_rag_chain()
 
 add_routes(app, agent, path="/agent")
-# add_routes(app, rag_chain, path="/rag")
+add_routes(app, rag_chain, path="/rag")
 
 @app.get("/")
 def root():

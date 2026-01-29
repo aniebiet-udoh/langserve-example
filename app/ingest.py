@@ -1,11 +1,14 @@
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.text_splitter import CharacterTextSplitter
+from langchain_community.vectorstores import FAISS
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 with open("data/docs.txt") as f:
     text = f.read()
 
-splitter = CharacterTextSplitter(chunk_size=300, chunk_overlap=50)
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,
+    chunk_overlap=50
+)
 docs = splitter.create_documents([text])
 
 embeddings = OpenAIEmbeddings()
