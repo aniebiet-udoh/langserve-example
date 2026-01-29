@@ -161,7 +161,7 @@ class PdfConverter:
             PdfConverterException: If conversion fails completely
         """
         config = ConversionConfig(
-            max_pages_per_chunk=max_pages_per_chunk,
+            max_pages_per_chunk=LLMProviderConfig.get_max_chunk_pages(llm_type, max_pages_per_chunk),
             auto_chunk=auto_chunk,
             remove_header_if_not_first=remove_header_if_not_first,
             max_retries=max_retries,

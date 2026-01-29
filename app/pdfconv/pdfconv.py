@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 
 
@@ -20,12 +21,21 @@ def main(argv=None):
 
 
     if args.mode == "smart":
+        from dotenv import load_dotenv
+        load_dotenv()
         from app.pdfconv.ai import PdfConverter
+
         converter = PdfConverter()
         converter.convert(
             input_filename=args.input,
             output_filename=args.output,
-            llm_type="groq",
+            llm_type=os.getenv("PDF_CONVERTER_LLM_PROVIDER", "openrouter"),
+            max_pages_per_chunk=int(os.getenv("PDF_CONVERTER_CHUNK_PAGES", "3")),
+            use_structured_messages=True,
+            extract_text=True,
+            auto_chunk=True,
+            remove_header_if_not_first=True,
+            max_retries=3,
         )
         return 0
 
