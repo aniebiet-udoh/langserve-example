@@ -5,7 +5,7 @@ Unit tests for the LLM module.
 import pytest
 import os
 from unittest.mock import patch, MagicMock, call
-from app.llm import get_llm
+from app.llm.llm import get_llm
 
 
 class TestGetLLM:

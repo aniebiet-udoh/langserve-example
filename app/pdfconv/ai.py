@@ -1,8 +1,10 @@
 from typing import Optional, Generator, List
 from .exceptions import PdfConverterException
-from .config import ConversionConfig, LLMProviderConfig
+from .config import ConversionConfig
 from .message_builder import MessageBuilder
 from .utils import PdfChunk, PdfUtils, CsvProcessor, FileManager
+
+from ..llm.config import LLMProviderConfig
 
 
 class PdfConverter:
@@ -161,7 +163,7 @@ class PdfConverter:
             PdfConverterException: If conversion fails completely
         """
         config = ConversionConfig(
-            max_pages_per_chunk=LLMProviderConfig.get_max_chunk_pages(llm_type, max_pages_per_chunk),
+            max_pages_per_chunk=ConversionConfig.get_max_chunk_pages(llm_type, max_pages_per_chunk),
             auto_chunk=auto_chunk,
             remove_header_if_not_first=remove_header_if_not_first,
             max_retries=max_retries,
