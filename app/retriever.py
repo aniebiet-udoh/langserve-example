@@ -1,22 +1,28 @@
-from langchain.embeddings import OpenAIEmbeddings
+import os
+
+from app.embeddings import get_embeddings
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import TextLoader
-from langchain_community.document_loaders import WebBaseLoader
 
 
-def get_doc_loader(file_path: str):
-    loader = TextLoader(file_path=file_path)
-    documents = loader.load()
-    return documents
+def get_retriever(docs=None):
+    """Return a retriever.
 
+    If a local vectorstore exists, load it. Otherwise build one from documents.
+    """
+    embeddings = get_embeddings(docs)
 
-def get_web_loader(url: str):
-    loader = WebBaseLoader(url)
-    webdocs = loader.load()
-    return webdocs
+    # Load existing vectorstore if present
+    if os.path.exists("vectorstore"):
+        db = FAISS.load_local("vectorstore", embeddings)
+    else:
+        db = FAISS.from_documents(docs, embeddings)
+        db.save_local("vectorstore")
 
-
-def get_retriever():
-    embeddings = OpenAIEmbeddings()
-    db = FAISS.load_local("vectorstore", embeddings)
     return db.as_retriever()
+
+
+def get_vectorstore(docs):
+    embeddings = get_embeddings(docs)
+    vectorstore = FAISS.from_documents(docs, embeddings)
+    vectorstore.save_local("vectorstore")
+    return vectorstore

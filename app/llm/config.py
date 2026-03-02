@@ -53,7 +53,7 @@ class LLMProviderConfig:
         return llm_type.lower() in supports
 
     @classmethod
-    def create_client(cls, llm_type: str, max_retries: int = 3, temperature: float = 0, timeout: int = 120, overrides = dict):
+    def create_client(cls, llm_type: str, max_retries: int = 3, temperature: float = 0, timeout: int = 120, overrides = {}):
         """Create an LLM client for the specified provider."""
         if llm_type not in cls.MODEL_CONFIGS:
             raise ValueError(f"Unknown llm_type: {llm_type}. Available: {list(cls.MODEL_CONFIGS.keys())}")

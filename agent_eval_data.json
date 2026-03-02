@@ -1,0 +1,10 @@
+[
+  {
+    "query": "What is artificial intelligence",
+    "response": "Artificial intelligence (AI) refers to the simulation of human intelligence processes by machines, particularly computer systems. These processes include learning (acquiring information and rules for using it), reasoning (using rules to reach approximate or definite conclusions), problem-solving, perception, and language understanding. AI is used in various applications, such as virtual assistants, recommendation systems, autonomous vehicles, and more. \n\nSince the tools provided did not yield specific information, this answer is based on general knowledge. Let me know if you'd like further clarification!"
+  },
+  {
+    "query": "What is pythogoras' theorem. Based on this theorem, give me the size of a hypotenuse of a right angle triangle with sides three and eight",
+    "response": "Pythagoras' theorem states that in a right-angled triangle, the square of the hypotenuse (the side opposite the right angle) is equal to the sum of the squares of the other two sides. Mathematically, this is expressed as:  \n$$ c = \\sqrt{a^2 + b^2} $$  \nwhere $ c $ is the hypotenuse, and $ a $, $ b $ are the other two sides.\n\nFor a triangle with sides 3 and 8:  \n$$ c = \\sqrt{3^2 + 8^2} = \\sqrt{9 + 64} = \\sqrt{73} \\approx 8.544 $$  \n\n**Answer:** The hypotenuse is approximately **8.544**."
+  }
+]

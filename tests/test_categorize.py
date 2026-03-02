@@ -41,3 +41,33 @@ def test_categorize_csv_saves_output(tmp_path, monkeypatch):
     saved = out_file.read_text(encoding='utf-8')
     assert 'category' in saved
     assert result[0]['category'] == 'Fruit'
+
+
+def test_categorize_csv_chunking(tmp_path, monkeypatch):
+    # 3 rows, chunk size 2 -> expect two LLM invocations
+    csv_path = tmp_path / "input.csv"
+    content = "item,description\napple,red\nbanana,yellow\nchair,wood\n"
+    csv_path.write_text(content, encoding="utf-8")
+
+    responses = [
+        "item,description,category\napple,red,Fruit\nbanana,yellow,Fruit\n",
+        "item,description,category\nchair,wood,Not Fruit\n",
+    ]
+
+    call_state = {"n": 0}
+
+    def invoke(messages):
+        idx = call_state["n"]
+        call_state["n"] += 1
+        return SimpleNamespace(content=responses[idx])
+
+    mock_llm = SimpleNamespace(invoke=invoke)
+    monkeypatch.setattr('app.sheet_tools.categorize.get_llm', lambda llm_type='openrouter': mock_llm)
+
+    result = categorize_csv(str(csv_path), categories=['Fruit', 'Not Fruit'], columns=['item', 'description'], max_rows=2)
+
+    assert len(result) == 3
+    assert result[0]['category'] == 'Fruit'
+    assert result[1]['category'] == 'Fruit'
+    assert result[2]['category'] == 'Not Fruit'
+    assert call_state['n'] == 2
