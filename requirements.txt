@@ -16,6 +16,7 @@ langchain-text-splitters
 langchain-openai
 langchain-groq
 langchain-google-genai
+langchain-huggingface
 openai
 faiss-cpu
 PyPDF2

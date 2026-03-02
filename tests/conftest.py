@@ -52,6 +52,12 @@ def pytest_configure(config):
         'langchain.tools': MagicMock(),
         'langchain.embeddings': MagicMock(),
         'langchain.vectorstores': MagicMock(),
+        # openai-specific provider used by llm.config
+        'langchain_openai': MagicMock(),
+        # community package used in repo
+        'langchain_community': MagicMock(),
+        'langchain_community.vectorstores': MagicMock(),
+        'langchain_community.document_loaders': MagicMock(),
     }
     
     # Add the Tool class to the langchain.tools mock
@@ -99,3 +105,10 @@ def mock_retrieval_qa():
     """Mock RetrievalQA to avoid complex initialization."""
     with patch('app.chains.RetrievalQA') as mock:
         yield mock
+
+
+@pytest.fixture
+def mock_all_factories():
+    """Placeholder fixture used by several tests. Does nothing by default."""
+    # previously used to combine other mocks; kept for compatibility
+    yield None

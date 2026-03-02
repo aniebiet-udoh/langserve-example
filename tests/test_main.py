@@ -7,6 +7,9 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 from tests.conftest import MockRunnable
 
+# bring the FastAPI app into module scope for some tests
+from app.main import app
+
 
 @pytest.fixture
 def client(mock_all_factories):
@@ -56,6 +59,37 @@ class TestAgentEndpoints:
         paths = openapi_schema.get("paths", {})
         agent_paths = [p for p in paths.keys() if "/agent" in p]
         assert len(agent_paths) > 0, "No agent endpoints found in OpenAPI schema"
+
+    def test_agent_stream2_sse_format(self, client, monkeypatch):
+        """Posting to /agent/stream2 should return SSE-style events."""
+
+        # prepare a fake stream generator that yields a couple of events
+        events = [
+            {"type": "message", "foo": "bar"},
+            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "hello"}},
+        ]
+
+        def fake_stream(params):
+            for ev in events:
+                yield ev
+
+        # patch the global agent used in the router
+        import app.custom_router as cr
+        monkeypatch.setattr(cr.agent, "stream", fake_stream)
+
+        payload = {"messages": [{"role": "user", "content": "hi"}]}
+        # Note: TestClient does not support the `stream` argument; the
+        # entire response body will be collected automatically.
+        response = client.post("/agent/stream2", json=payload)
+        assert response.status_code == 200
+        # The media type should be event-stream
+        assert response.headers.get("content-type", "").startswith("text/event-stream")
+
+        text = response.content.decode()
+        # basic checks for SSE formatting and our fake data
+        assert "event: message" in text
+        assert "event: content_block_delta" in text
+        assert '"foo": "bar"' in text
 
 
 class TestRAGEndpoints:
@@ -150,3 +184,4 @@ class TestApplicationStartup:
         
         assert len(agent_routes) > 0, "No agent routes found"
         assert len(rag_routes) > 0, "No rag routes found"
+

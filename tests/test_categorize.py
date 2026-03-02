@@ -9,8 +9,8 @@ def test_categorize_csv_basic(tmp_path, monkeypatch):
     content = "item,description\napple,red\nchair,wood\n"
     csv_path.write_text(content, encoding="utf-8")
 
-    # Prepare mocked LLM response (as CSV)
-    response_csv = "item,description,category\napple,red,Fruit\nchair,wood,Not Fruit\n"
+    # Prepare mocked LLM response (as CSV) including the index column
+    response_csv = "__row_index,item,description,category\n0,apple,red,Fruit\n1,chair,wood,Not Fruit\n"
 
     # Mock LLM client
     mock_llm = SimpleNamespace(invoke=lambda messages: SimpleNamespace(content=response_csv))
@@ -30,7 +30,7 @@ def test_categorize_csv_saves_output(tmp_path, monkeypatch):
     content = "item,description\napple,red\n"
     csv_path.write_text(content, encoding="utf-8")
 
-    response_csv = "item,description,category\napple,red,Fruit\n"
+    response_csv = "__row_index,item,description,category\n0,apple,red,Fruit\n"
     mock_llm = SimpleNamespace(invoke=lambda messages: SimpleNamespace(content=response_csv))
     monkeypatch.setattr('app.sheet_tools.categorize.get_llm', lambda llm_type='openrouter': mock_llm)
 
@@ -50,8 +50,8 @@ def test_categorize_csv_chunking(tmp_path, monkeypatch):
     csv_path.write_text(content, encoding="utf-8")
 
     responses = [
-        "item,description,category\napple,red,Fruit\nbanana,yellow,Fruit\n",
-        "item,description,category\nchair,wood,Not Fruit\n",
+        "__row_index,item,description,category\n0,apple,red,Fruit\n1,banana,yellow,Fruit\n",
+        "__row_index,item,description,category\n2,chair,wood,Not Fruit\n",
     ]
 
     call_state = {"n": 0}

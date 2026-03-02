@@ -62,3 +62,17 @@ class TestGetRetriever:
             
             assert result is not None
             assert result == mock_retriever
+
+    def test_get_retriever_builds_vectorstore_when_missing(self, mock_openai_embeddings):
+        """When no local vectorstore exists, build one from documents and save it."""
+        with patch('app.retriever.FAISS') as mock_faiss, patch('app.retriever.os.path.exists', return_value=False):
+            mock_faiss_instance = MagicMock()
+            mock_faiss_instance.as_retriever.return_value = MagicMock()
+            mock_faiss.from_documents.return_value = mock_faiss_instance
+
+            result = get_retriever()
+
+            # Verify FAISS.from_documents was called and save_local was invoked
+            mock_faiss.from_documents.assert_called_once()
+            mock_faiss_instance.save_local.assert_called_once_with('vectorstore')
+            assert result is not None
